@@ -1,4 +1,5 @@
-import Game, pygame, os, random, numpy as np
+import Game, pygame, os, random, numpy as np, time
+#import pandas as pd
 def placeOptions(gameInstance: Game):
     grid1 = np.zeros((5,5))
     grid2 = np.zeros((5, 5))
@@ -122,6 +123,32 @@ def startGame(gameInstance: Game):
 
     while not done:
         #selected = False
+        autoPlay = True
+        if autoPlay:
+            df = gameInstance.getPossibleStates()
+            evalSort = df.sort_values('eval', ascending=False)
+            for i in range(300):
+                block = evalSort.iloc[i]['BlockID']
+                blockLocation = evalSort.iloc[i]['Location']
+                if gameInstance.place(block,blockLocation):
+                    gameInstance.update()
+                    gameInstance.possibleMoves.remove(block)
+                    break
+            # id = df['eval'].idxmax()
+            # maxentry = df.iloc[df['eval'].idxmax()]
+            # print(maxentry)
+            # print(gameInstance.board)
+            # x, y = maxentry['Location']
+            # if gameInstance.place(maxentry['BlockID'], (x, y)):
+            #     gameInstance.update()
+            #     gameInstance.possibleMoves.remove(maxentry['BlockID'])
+            if len(gameInstance.possibleMoves) == 0:
+                gameInstance.updateMoves()
+            if gameInstance.checkLose() == True:
+                print("You have lost! Final score:",gameInstance.getBoard().getScore())
+                done = True
+
+            placeOptions(gameInstance)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
@@ -173,6 +200,7 @@ def startGame(gameInstance: Game):
                     #gameInstance[row,column] = 1
                 except IndexError:
                     continue
+
 
         screen.fill(BLACK)
         scoreText = str(gameInstance.getBoard().getScore())

@@ -373,8 +373,11 @@ class GameBoard:
             x, y = middle
             if x < 2 or y > 8:
                 return False
-            if self.board[x][y] != 0.0 or self.board[x - 1][y] != 0.0 or self.board[x][y + 1] != 0.0 or \
-                    self.board[x - 2][y] != 0.0 or self.board[x][y + 2] != 0.0:
+            try:
+                if self.board[x][y] != 0.0 or self.board[x - 1][y] != 0.0 or self.board[x][y + 1] != 0.0 or \
+                        self.board[x - 2][y] != 0.0 or self.board[x][y + 2] != 0.0:
+                    return False
+            except IndexError:
                 return False
             else:
                 self.board[x][y] = 1.0
@@ -708,7 +711,10 @@ class GameBoard:
         x, y = middle
         if x < 2 or y > 8:
             return False
-        if self.board[x][y] != 0.0 or self.board[x - 1][y] != 0.0 or self.board[x][y + 1] != 0.0 or self.board[x - 2][y] != 0.0 or self.board[x][y + 2] != 0.0:
+        try:
+            if self.board[x][y] != 0.0 or self.board[x - 1][y] != 0.0 or self.board[x][y + 1] != 0.0 or self.board[x - 2][y] != 0.0 or self.board[x][y + 2] != 0.0:
+                return False
+        except IndexError:
             return False
         else:
             self.board[x][y] = 1.0
@@ -1172,6 +1178,35 @@ class GameBoard:
                 if mask[i, j]:
                     self.newOrphanSquares(mask, i, j, [])
         return self.orphanSquares
+    def possiblePlaces(self):
+        total = 0
+        functionList = [self.checkThreeByThree,
+                        self.checkTwoByTwo,
+                        self.checkTwoByOne,
+                        self.checkThreeByOne,
+                        self.checkFourByOne,
+                        self.checkFiveByOne,
+                        self.checkOneByOne,
+                        self.checkOneByTwo,
+                        self.checkOneByThree,
+                        self.checkOneByFour,
+                        self.checkOneByFive,
+                        self.checkStep1,
+                        self.checkStep2,
+                        self.checkStep3,
+                        self.checkStep4,
+                        self.checkl1,
+                        self.checkl2,
+                        self.checkl3,
+                        self.checkl4]
+        for i in range(10):
+            for j in range(10):
+                for f in functionList:
+                    if f((i,j)):
+                        total+=1
+                        functionList.remove(f)
+        return total
+
 def main():
     board = GameBoard()
     board.twoByTwo((4,5))

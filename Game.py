@@ -36,115 +36,96 @@ class Game:
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 1:
                             tempResult = self.board.checkTwoByTwo((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 2:
                             tempResult = self.board.checkTwoByOne((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 3:
                             tempResult = self.board.checkThreeByOne((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 4:
                             tempResult = self.board.checkFourByOne((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 5:
                             tempResult = self.board.checkFiveByOne((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 6:
                             tempResult = self.board.checkOneByOne((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 7:
                             tempResult = self.board.checkOneByTwo((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 8:
                             tempResult = self.board.checkOneByThree((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 9:
                             tempResult = self.board.checkOneByFour((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 10:
                             tempResult = self.board.checkOneByFive((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 11:
                             tempResult = self.board.checkStep1((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 12:
                             tempResult = self.board.checkStep2((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 13:
                             tempResult = self.board.checkStep3((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 14:
                             tempResult = self.board.checkStep4((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 15:
                             tempResult = self.board.checkl1((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 16:
                             tempResult = self.board.checkl2((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 17:
                             tempResult = self.board.checkl3((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
                         elif entry == 18:
                             tempResult = self.board.checkl4((i, j))
                             if tempResult:
                                 entryResult = True
                                 breakLoop = True
-                                print(entry, i, j)
             done = True
         return not entryResult
     def printBoard(self):
@@ -266,24 +247,48 @@ class Game:
         emptyRows = []
         emptyColumns = []
         longestDFS = []
+        eval = []
+        moves = []
+        scores = []
+        possiblePlaces = []
         for move in self.possibleMoves:
             for i in range(10):
                 for j in range(10):
-                    tempBoard = self.getBoard()
+                    tempBoard = GameBoard()
                     tempBoard.placeBlock(move, (i,j))
                     key = str(move) + str(i) +str(j)
                     stateID.append(key)
+                    moves.append(move)
                     location.append((i,j))
-                    orphanSquares.append(tempBoard.getOrphanSquares())
-                    maxHorizontal.append(tempBoard.maxHorizontal())
-                    maxVertical.append(tempBoard.maxVertical())
-                    totalSquares.append(tempBoard.totalSquares())
-                    emptyRows.append(tempBoard.emptyRows())
-                    emptyColumns.append(tempBoard.emptyColumns())
-                    longestDFS.append(tempBoard.getOpenSpace())
-        df = pd.DataFrame(list(zip(stateID,location,orphanSquares,maxHorizontal,maxVertical,totalSquares,emptyRows,emptyColumns,longestDFS)),
-            columns=["StateID", "Location", "OrphanSquares", "MaxHorizontal", "MaxVertical", "TotalSquares",
-                     "EmptyRows", "EmptyColumns", "LongestDFS"])
+                    # orphanNum = tempBoard.getOrphanSquares()
+                    # orphanSquares.append(orphanNum)
+                    score = tempBoard.getScore()-self.board.getScore()
+                    scores.append(score)
+                    places = self.board.possiblePlaces()
+                    possiblePlaces.append(places)
+                    maxHNum = tempBoard.maxHorizontal()
+                    maxHorizontal.append(maxHNum)
+                    maxVNum = tempBoard.maxVertical()
+                    maxVertical.append(maxVNum)
+                    numFull = tempBoard.totalSquares()
+                    totalSquares.append(numFull)
+                    numREmpty = tempBoard.emptyRows()
+                    emptyRows.append(numREmpty)
+                    numCEmpty = tempBoard.emptyColumns()
+                    emptyColumns.append(numCEmpty)
+                    # largestSpace = tempBoard.getOpenSpace()
+                    # longestDFS.append(largestSpace)
+                    # eval.append(score*10 - numFull + (numREmpty * 100)+places**3)
+                    eval.append(places*2 + numREmpty + numCEmpty)
+        df = pd.DataFrame(list(
+            zip(stateID, moves, location, possiblePlaces, scores, maxHorizontal, maxVertical, totalSquares, emptyRows,
+                emptyColumns, eval)),
+                          columns=["StateID", "BlockID", "Location", "PossiblePlaces","Score","MaxHorizontal", "MaxVertical",
+                                   "TotalSquares",
+                                   "EmptyRows", "EmptyColumns", "eval"])
+        # df = pd.DataFrame(list(zip(stateID, moves, location,orphanSquares,maxHorizontal,maxVertical,totalSquares,emptyRows,emptyColumns,longestDFS,eval)),
+        #     columns=["StateID", "BlockID","Location", "OrphanSquares", "MaxHorizontal", "MaxVertical", "TotalSquares",
+        #              "EmptyRows", "EmptyColumns", "LongestDFS","eval"])
         return df
 
 def main():
