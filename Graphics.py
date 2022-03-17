@@ -126,6 +126,7 @@ def startGame(gameInstance: Game):
         autoPlay = True
         if autoPlay:
             df = gameInstance.getPossibleStates()
+            print(df)
             evalSort = df.sort_values('eval', ascending=False)
             for i in range(300):
                 block = evalSort.iloc[i]['BlockID']

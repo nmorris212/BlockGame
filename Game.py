@@ -251,6 +251,7 @@ class Game:
         moves = []
         scores = []
         possiblePlaces = []
+        parentStates = []
         for move in self.possibleMoves:
             for i in range(10):
                 for j in range(10):
@@ -280,26 +281,54 @@ class Game:
                     # longestDFS.append(largestSpace)
                     # eval.append(score*10 - numFull + (numREmpty * 100)+places**3)
                     eval.append(places*2 + numREmpty + numCEmpty)
-        df = pd.DataFrame(list(
-            zip(stateID, moves, location, possiblePlaces, scores, maxHorizontal, maxVertical, totalSquares, emptyRows,
-                emptyColumns, eval)),
+                    parentStates.append([])
+        df = pd.DataFrame(list(zip(stateID, moves, location, possiblePlaces, scores, maxHorizontal, maxVertical, totalSquares, emptyRows,
+                emptyColumns, eval, parentStates)),
                           columns=["StateID", "BlockID", "Location", "PossiblePlaces","Score","MaxHorizontal", "MaxVertical",
                                    "TotalSquares",
-                                   "EmptyRows", "EmptyColumns", "eval"])
+                                   "EmptyRows", "EmptyColumns", "eval", "ParentStates"])
         # df = pd.DataFrame(list(zip(stateID, moves, location,orphanSquares,maxHorizontal,maxVertical,totalSquares,emptyRows,emptyColumns,longestDFS,eval)),
         #     columns=["StateID", "BlockID","Location", "OrphanSquares", "MaxHorizontal", "MaxVertical", "TotalSquares",
         #              "EmptyRows", "EmptyColumns", "LongestDFS","eval"])
         return df
 
+    def deepSearch(self, percentage, depth = 3):
+        df = self.getPossibleStates()
+        print(df)
+        depth-=1
+        for i in range(depth):
+            newdf = pd.DataFrame(columns=["StateID", "BlockID", "Location", "PossiblePlaces","Score","MaxHorizontal", "MaxVertical",
+                                   "TotalSquares",
+                                   "EmptyRows", "EmptyColumns", "eval", "ParentStates"])
+            topPercent = df.iloc[:int(len(df) * percentage)]
+            for entry in range(len(topPercent)):
+                tempBoard = self
+                for state in newdf["ParentStates"]:
+                    if len(state) !=0:
+                        if tempBoard.place(topPercent.iloc[i]["BlockID"],topPercent.iloc[i]["Location"]):
+                            tempBoard.update()
+                            tempBoard.possibleMoves.remove(topPercent.iloc[i]["BlockID"])
+                            continue
+                        else:
+                            entry['eval'] = 0
+                    else:
+                        state.append(entry)
+                newPossibleStates = tempBoard.getPossibleStates()
+                newdf = pd.concat([newdf, newPossibleStates],axis=0)
+                # print(tempBoard.getPossibleStates())
+        return newdf
+
+
 def main():
     newGame = Game()
-    print(newGame.getPossibleStates())
-    # board = newGame.board
-    # board.twoByTwo((4, 5))
-    # board.threeByThree((1, 1))
-    # board.threeByThree((1, 4))
-    # board.threeByThree((1, 7))
-    # board.threeByOne((1, 9))
+
+    board = newGame.board
+    board.twoByTwo((4, 5))
+    board.threeByThree((1, 1))
+    board.threeByThree((1, 4))
+    board.threeByThree((1, 7))
+    board.threeByOne((1, 9))
+    print(newGame.deepSearch(.01))
     # board.step4((1, 1))
     # board.step3((8, 1))
     # board.step2((1, 8))
