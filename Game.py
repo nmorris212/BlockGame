@@ -292,7 +292,7 @@ class Game:
         #              "EmptyRows", "EmptyColumns", "LongestDFS","eval"])
         return df
 
-    def deepSearch(self, percentage, depth = 3):
+    def deepSearch(self, percentage, depth = 2):
         df = self.getPossibleStates()
         print(df)
         depth-=1
@@ -300,7 +300,8 @@ class Game:
             newdf = pd.DataFrame(columns=["StateID", "BlockID", "Location", "PossiblePlaces","Score","MaxHorizontal", "MaxVertical",
                                    "TotalSquares",
                                    "EmptyRows", "EmptyColumns", "eval", "ParentStates"])
-            topPercent = df.iloc[:int(len(df) * percentage)]
+            top = max(int(len(df)*percentage),10)
+            topPercent = df.iloc[:top]
             for entry in range(len(topPercent)):
                 tempBoard = self
                 for state in newdf["ParentStates"]:
@@ -310,12 +311,18 @@ class Game:
                             tempBoard.possibleMoves.remove(topPercent.iloc[i]["BlockID"])
                             continue
                         else:
-                            entry['eval'] = 0
+                            continue
+                            # entry['eval'] = 0
                     else:
-                        state.append(entry)
+                        state.append(topPercent.iloc[entry])
                 newPossibleStates = tempBoard.getPossibleStates()
                 newdf = pd.concat([newdf, newPossibleStates],axis=0)
                 # print(tempBoard.getPossibleStates())
+        for i in range(len(newdf)):
+            decay = .5
+            for j in range(len(newdf.iloc[i]["ParentStates"])):
+                newDecay = decay**j
+                newdf.at[i,'eval'] = newdf.iloc[i]['eval'] +newdf.iloc[i]["ParentStates"][0].loc['eval']*newDecay
         return newdf
 
 

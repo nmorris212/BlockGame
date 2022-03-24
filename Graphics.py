@@ -125,7 +125,8 @@ def startGame(gameInstance: Game):
         #selected = False
         autoPlay = True
         if autoPlay:
-            df = gameInstance.getPossibleStates()
+            # df = gameInstance.getPossibleStates()
+            df = gameInstance.deepSearch(.01)
             print(df)
             evalSort = df.sort_values('eval', ascending=False)
             for i in range(300):
