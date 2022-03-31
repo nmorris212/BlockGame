@@ -291,9 +291,15 @@ class Game:
         #     columns=["StateID", "BlockID","Location", "OrphanSquares", "MaxHorizontal", "MaxVertical", "TotalSquares",
         #              "EmptyRows", "EmptyColumns", "LongestDFS","eval"])
         return df
+    def expandState(self, state):
+        newGame = self
+        newGame.place(state['BlockID'],state['Location'])
+        df = newGame.getPossibleStates()
+        return df
 
     def deepSearch(self, percentage, depth = 2):
         df = self.getPossibleStates()
+        newdf = pd.DataFrame()
         print(df)
         depth-=1
         for i in range(depth):
@@ -302,28 +308,33 @@ class Game:
                                    "EmptyRows", "EmptyColumns", "eval", "ParentStates"])
             top = max(int(len(df)*percentage),10)
             topPercent = df.iloc[:top]
-            for entry in range(len(topPercent)):
-                tempBoard = self
-                for state in newdf["ParentStates"]:
-                    if len(state) !=0:
-                        if tempBoard.place(topPercent.iloc[i]["BlockID"],topPercent.iloc[i]["Location"]):
-                            tempBoard.update()
-                            tempBoard.possibleMoves.remove(topPercent.iloc[i]["BlockID"])
-                            continue
-                        else:
-                            continue
-                            # entry['eval'] = 0
-                    else:
-                        state.append(topPercent.iloc[entry])
-                newPossibleStates = tempBoard.getPossibleStates()
-                newdf = pd.concat([newdf, newPossibleStates],axis=0)
-                # print(tempBoard.getPossibleStates())
-        for i in range(len(newdf)):
-            decay = .5
-            for j in range(len(newdf.iloc[i]["ParentStates"])):
-                newDecay = decay**j
-                newdf.at[i,'eval'] = newdf.iloc[i]['eval'] +newdf.iloc[i]["ParentStates"][0].loc['eval']*newDecay
-        return newdf
+        # twoDeep = pd.DataFrame()
+        twoDeep = topPercent
+        for index, row in topPercent.iterrows():
+            twoDeep = pd.concat([twoDeep,self.expandState(row)])
+        #     for entry in range(len(topPercent)):
+        #         tempBoard = self
+        #         for state in newdf["ParentStates"]:
+        #             if len(state) !=0:
+        #                 if tempBoard.place(topPercent.iloc[i]["BlockID"],topPercent.iloc[i]["Location"]):
+        #                     tempBoard.update()
+        #                     tempBoard.possibleMoves.remove(topPercent.iloc[i]["BlockID"])
+        #                     continue
+        #                 else:
+        #                     continue
+        #                     # entry['eval'] = 0
+        #             else:
+        #                 state.append(topPercent.iloc[entry])
+        #         newPossibleStates = tempBoard.getPossibleStates()
+        #         newdf = pd.concat([newdf, newPossibleStates],axis=0)
+        #         # print(tempBoard.getPossibleStates())
+        # for i in range(len(newdf)):
+        #     decay = .5
+        #     for j in range(len(newdf.iloc[i]["ParentStates"])):
+        #         newDecay = decay**j
+        #         newdf.at[i,'eval'] = newdf.iloc[i]['eval'] +newdf.iloc[i]["ParentStates"][0].loc['eval']*newDecay
+        return twoDeep
+        # return newdf
 
 
 def main():
