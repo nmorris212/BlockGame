@@ -1,4 +1,4 @@
-import numpy as np, pandas as pd, random, time
+import numpy as np, pandas as pd, random, time, copy
 from GameBoard import GameBoard
 class Game:
     def __init__(self):
@@ -255,32 +255,32 @@ class Game:
         for move in self.possibleMoves:
             for i in range(10):
                 for j in range(10):
-                    tempBoard = GameBoard()
-                    tempBoard.placeBlock(move, (i,j))
+                    tempBoard = copy.deepcopy(self)
+                    tempBoard.place(move, (i,j))
                     key = str(move) + str(i) +str(j)
                     stateID.append(key)
                     moves.append(move)
                     location.append((i,j))
                     # orphanNum = tempBoard.getOrphanSquares()
                     # orphanSquares.append(orphanNum)
-                    score = tempBoard.getScore()-self.board.getScore()
+                    score = tempBoard.board.getScore()-self.board.getScore()
                     scores.append(score)
                     places = self.board.possiblePlaces()
                     possiblePlaces.append(places)
-                    maxHNum = tempBoard.maxHorizontal()
+                    maxHNum = tempBoard.board.maxHorizontal()
                     maxHorizontal.append(maxHNum)
-                    maxVNum = tempBoard.maxVertical()
+                    maxVNum = tempBoard.board.maxVertical()
                     maxVertical.append(maxVNum)
-                    numFull = tempBoard.totalSquares()
+                    numFull = tempBoard.board.totalSquares()
                     totalSquares.append(numFull)
-                    numREmpty = tempBoard.emptyRows()
+                    numREmpty = tempBoard.board.emptyRows()
                     emptyRows.append(numREmpty)
-                    numCEmpty = tempBoard.emptyColumns()
+                    numCEmpty = tempBoard.board.emptyColumns()
                     emptyColumns.append(numCEmpty)
                     # largestSpace = tempBoard.getOpenSpace()
                     # longestDFS.append(largestSpace)
                     # eval.append(score*10 - numFull + (numREmpty * 100)+places**3)
-                    eval.append(places*2 + numREmpty + numCEmpty)
+                    eval.append(places*2 + numREmpty + numCEmpty + (score*5))
                     parentStates.append([])
         df = pd.DataFrame(list(zip(stateID, moves, location, possiblePlaces, scores, maxHorizontal, maxVertical, totalSquares, emptyRows,
                 emptyColumns, eval, parentStates)),
