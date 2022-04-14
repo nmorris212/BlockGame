@@ -126,7 +126,7 @@ def startGame(gameInstance: Game):
         autoPlay = True
         if autoPlay:
             # df = gameInstance.getPossibleStates()
-            df = gameInstance.deepSearch(.02)
+            df = gameInstance.deepSearch(.05)
             print(df)
             evalSort = df.sort_values('eval', ascending=False)
             for i in range(len(evalSort)):
@@ -148,6 +148,7 @@ def startGame(gameInstance: Game):
             if len(gameInstance.possibleMoves) == 0:
                 gameInstance.updateMoves()
             if gameInstance.checkLose() == True:
+                time.sleep(.3)
                 print("You have lost! Final score:",gameInstance.getBoard().getScore())
                 done = True
 

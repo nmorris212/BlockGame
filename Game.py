@@ -256,7 +256,8 @@ class Game:
             for i in range(10):
                 for j in range(10):
                     tempBoard = copy.deepcopy(self)
-                    tempBoard.place(move, (i,j))
+                    if not tempBoard.place(move, (i,j)):
+                        continue
                     key = str(move) + str(i) +str(j)
                     stateID.append(key)
                     moves.append(move)
@@ -292,26 +293,32 @@ class Game:
         #              "EmptyRows", "EmptyColumns", "LongestDFS","eval"])
         return df
     def expandState(self, state):
-        newGame = self
+        newGame = copy.deepcopy(self)
         newGame.place(state['BlockID'],state['Location'])
         df = newGame.getPossibleStates()
+        for index, row in df.iterrows():
+            row['ParentStates'] = row['ParentStates'] + state['ParentStates']
+
+        # df['ParentStates'] = df['ParentStates'] +state['ParentStates']
         return df
 
     def deepSearch(self, percentage, depth = 2):
         df = self.getPossibleStates()
-        newdf = pd.DataFrame()
-        print(df)
-        depth-=1
+
+        # depth-=1
+        twoDeep = pd.DataFrame(columns=["StateID", "BlockID", "Location", "PossiblePlaces","Score","MaxHorizontal", "MaxVertical","TotalSquares","EmptyRows", "EmptyColumns", "eval", "ParentStates"])
         for i in range(depth):
-            newdf = pd.DataFrame(columns=["StateID", "BlockID", "Location", "PossiblePlaces","Score","MaxHorizontal", "MaxVertical",
-                                   "TotalSquares",
-                                   "EmptyRows", "EmptyColumns", "eval", "ParentStates"])
             top = max(int(len(df)*percentage),10)
             topPercent = df.iloc[:top]
+            twoDeep = twoDeep[0:0]
+            for index, row in topPercent.iterrows():
+                twoDeep = pd.concat([twoDeep, self.expandState(row)])
+            df = twoDeep
+            print(df)
+
         # twoDeep = pd.DataFrame()
-        twoDeep = topPercent
-        for index, row in topPercent.iterrows():
-            twoDeep = pd.concat([twoDeep,self.expandState(row)])
+        # twoDeep = topPercent
+
         #     for entry in range(len(topPercent)):
         #         tempBoard = self
         #         for state in newdf["ParentStates"]:
