@@ -280,8 +280,8 @@ class Game:
                     # largestSpace = tempBoard.getOpenSpace()
                     # longestDFS.append(largestSpace)
                     # eval.append(score*10 - numFull + (numREmpty * 100)+places**3)
-                    eval.append(places*2 + numREmpty + numCEmpty + (score*5))
-                    parentStates.append([])
+                    eval.append(places*2 + numREmpty*3 + numCEmpty*3 + (score*2))
+                    parentStates.append((move,(i,j)))
         df = pd.DataFrame(list(zip(stateID, moves, location, possiblePlaces, scores, maxHorizontal, maxVertical, totalSquares, emptyRows,
                 emptyColumns, eval, parentStates)),
                           columns=["StateID", "BlockID", "Location", "PossiblePlaces","Score","MaxHorizontal", "MaxVertical",

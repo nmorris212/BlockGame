@@ -126,15 +126,16 @@ def startGame(gameInstance: Game):
         autoPlay = True
         if autoPlay:
             # df = gameInstance.getPossibleStates()
-            df = gameInstance.deepSearch(.01)
+            df = gameInstance.deepSearch(.02)
             print(df)
             evalSort = df.sort_values('eval', ascending=False)
-            for i in range(300):
+            for i in range(len(evalSort)):
                 block = evalSort.iloc[i]['BlockID']
                 blockLocation = evalSort.iloc[i]['Location']
                 if gameInstance.place(block,blockLocation):
                     gameInstance.update()
                     gameInstance.possibleMoves.remove(block)
+                    time.sleep(.3)
                     break
             # id = df['eval'].idxmax()
             # maxentry = df.iloc[df['eval'].idxmax()]
