@@ -87,6 +87,7 @@ def startGame(gameInstance: Game):
     WHITE = (255, 255, 255)
     GREEN = (0, 255, 0)
     RED = (255, 0, 0)
+    BLUE = (0,0,255)
 
     WIDTH = 36
     HEIGHT = 36
@@ -112,7 +113,7 @@ def startGame(gameInstance: Game):
     # Display score
     font = pygame.font.Font('freesansbold.ttf', 32)
 
-    text = font.render('Score: 0', True, GREEN, WHITE)
+    text = font.render('Score: 0', True, GREEN, BLACK)
 
     # create a rectangular object for the
     # text surface object
@@ -208,7 +209,7 @@ def startGame(gameInstance: Game):
 
         screen.fill(BLACK)
         scoreText = str(gameInstance.getBoard().getScore())
-        text = font.render('Score: ' + scoreText, True, GREEN, WHITE)
+        text = font.render('Score: ' + scoreText, True, GREEN, BLACK)
         screen.blit(text, textRect)
         for row in range(10):
             for column in range(10):
