@@ -3,6 +3,8 @@ from GameBoard import GameBoard
 class Game:
     def __init__(self):
         # 19
+        # Setting Random Seed for People vs Bot
+        # random.seed(42)
         self.possibleMoves = [random.randint(0,18), random.randint(0,18), random.randint(0,18)]
         self.board = GameBoard()
         self.moves = self.getMoves()
@@ -20,114 +22,118 @@ class Game:
     def getMoveIDs(self):
         return self.possibleMoves
     def checkLose(self):
-        done = False
-        entryResult = False
-        breakLoop = False
-        while (not entryResult) and (not done):
-            for entry in self.possibleMoves:
-                if breakLoop:
-                    break
-                for i in range(10):
-                    if breakLoop:
-                        break
-                    for j in range(10):
-                        if entry == 0:
-                            tempResult = self.board.checkThreeByThree((i,j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 1:
-                            tempResult = self.board.checkTwoByTwo((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 2:
-                            tempResult = self.board.checkTwoByOne((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 3:
-                            tempResult = self.board.checkThreeByOne((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 4:
-                            tempResult = self.board.checkFourByOne((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 5:
-                            tempResult = self.board.checkFiveByOne((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 6:
-                            tempResult = self.board.checkOneByOne((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 7:
-                            tempResult = self.board.checkOneByTwo((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 8:
-                            tempResult = self.board.checkOneByThree((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 9:
-                            tempResult = self.board.checkOneByFour((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 10:
-                            tempResult = self.board.checkOneByFive((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 11:
-                            tempResult = self.board.checkStep1((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 12:
-                            tempResult = self.board.checkStep2((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 13:
-                            tempResult = self.board.checkStep3((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 14:
-                            tempResult = self.board.checkStep4((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 15:
-                            tempResult = self.board.checkl1((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 16:
-                            tempResult = self.board.checkl2((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 17:
-                            tempResult = self.board.checkl3((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-                        elif entry == 18:
-                            tempResult = self.board.checkl4((i, j))
-                            if tempResult:
-                                entryResult = True
-                                breakLoop = True
-            done = True
-        return not entryResult
+        # done = False
+        # entryResult = False
+        # breakLoop = False
+        # while (not entryResult) and (not done):
+        #     for entry in self.possibleMoves:
+        #         if breakLoop:
+        #             break
+        #         for i in range(10):
+        #             if breakLoop:
+        #                 break
+        #             for j in range(10):
+        #                 if entry == 0:
+        #                     tempResult = self.board.checkThreeByThree((i,j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 1:
+        #                     tempResult = self.board.checkTwoByTwo((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 2:
+        #                     tempResult = self.board.checkTwoByOne((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 3:
+        #                     tempResult = self.board.checkThreeByOne((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 4:
+        #                     tempResult = self.board.checkFourByOne((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 5:
+        #                     tempResult = self.board.checkFiveByOne((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 6:
+        #                     tempResult = self.board.checkOneByOne((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 7:
+        #                     tempResult = self.board.checkOneByTwo((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 8:
+        #                     tempResult = self.board.checkOneByThree((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 9:
+        #                     tempResult = self.board.checkOneByFour((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 10:
+        #                     tempResult = self.board.checkOneByFive((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 11:
+        #                     tempResult = self.board.checkStep1((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 12:
+        #                     tempResult = self.board.checkStep2((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 13:
+        #                     tempResult = self.board.checkStep3((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 14:
+        #                     tempResult = self.board.checkStep4((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 15:
+        #                     tempResult = self.board.checkl1((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 16:
+        #                     tempResult = self.board.checkl2((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 17:
+        #                     tempResult = self.board.checkl3((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #                 elif entry == 18:
+        #                     tempResult = self.board.checkl4((i, j))
+        #                     if tempResult:
+        #                         entryResult = True
+        #                         breakLoop = True
+        #     done = True
+        # return not entryResult
+        if len(self.getPossibleStates()) > 0:
+            return False
+        else:
+            return True
     def printBoard(self):
         print(self.board)
 
@@ -281,7 +287,7 @@ class Game:
                     # largestSpace = tempBoard.getOpenSpace()
                     # longestDFS.append(largestSpace)
                     # eval.append(score*10 - numFull + (numREmpty * 100)+places**3)
-                    eval.append((places**2)/25 + numREmpty*3 + numCEmpty*3 + (score*2)+(abs(i-5)+abs(j-5))/2)
+                    eval.append((places**2)/25 + numREmpty*3 + numCEmpty*3 + (score*2)+(abs(i-5)+abs(j-5))/3)
                     parentStates.append((move,(i,j)))
         df = pd.DataFrame(list(zip(stateID, moves, location, possiblePlaces, scores, maxHorizontal, maxVertical, totalSquares, emptyRows,
                 emptyColumns, eval, parentStates)),

@@ -130,13 +130,15 @@ def startGame(gameInstance: Game):
             df = gameInstance.deepSearch(.05)
             print(df)
             evalSort = df.sort_values('eval', ascending=False)
+            if len(evalSort) == 0:
+                evalSort = gameInstance.getPossibleStates()
             for i in range(len(evalSort)):
                 block = evalSort.iloc[i]['BlockID']
                 blockLocation = evalSort.iloc[i]['Location']
                 if gameInstance.place(block,blockLocation):
-                    gameInstance.update()
+                    # gameInstance.update()
                     gameInstance.possibleMoves.remove(block)
-                    time.sleep(.3)
+                    time.sleep(.5)
                     break
             # id = df['eval'].idxmax()
             # maxentry = df.iloc[df['eval'].idxmax()]
@@ -149,8 +151,9 @@ def startGame(gameInstance: Game):
             if len(gameInstance.possibleMoves) == 0:
                 gameInstance.updateMoves()
             if gameInstance.checkLose() == True:
-                time.sleep(.3)
+                # time.sleep(25)
                 print("You have lost! Final score:",gameInstance.getBoard().getScore())
+                time.sleep(5)
                 done = True
 
             placeOptions(gameInstance)
